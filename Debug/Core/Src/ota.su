@@ -1,4 +1,4 @@
 ../Core/Src/ota.c:88:13:fmt_flt	24	static
 ../Core/Src/ota.c:78:6:OTA_Init	0	static
-../Core/Src/ota.c:104:6:Process_Web_OTA	792	static,ignoring_inline_asm
+../Core/Src/ota.c:104:6:Process_Web_OTA	648	static,ignoring_inline_asm
 ../Core/Src/ota.c:83:6:OTA_Process	0	static

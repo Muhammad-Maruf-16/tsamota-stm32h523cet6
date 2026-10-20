@@ -45,11 +45,9 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define DEBUG_MQTT
-#define MAX_FIRMWARE_SIZE     (1020UL * 1024UL)
+#define MAX_FIRMWARE_SIZE     (480UL * 1024UL)
 
 /* Alamat partisi di OctoSPI Flash eksternal */
-#define FLASH_APP_META        0x00000000U
-#define FLASH_APP_BIN         0x00001000U
 #define FLASH_STAGING_META    0x00100000U  /* 1 MB offset (Sektor 256) */
 #define FLASH_STAGING_BIN     0x00101000U  /* 1 MB + 4 KB (Sektor 257) */
 
@@ -319,7 +317,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-    SCB->VTOR = 0x90001000UL;
+    SCB->VTOR = 0x08002000UL;
     __enable_irq();
   /* USER CODE END 1 */
 
@@ -348,6 +346,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_UART5_Init();
   /* USER CODE BEGIN 2 */
+    /* Pastikan OctoSPI dalam mode Memory-Mapped (0x90000000) untuk membaca web dari ext flash */
+    OCTOSPI1_LL_MemoryMapped();
+
     LL_SPI_SetTransferSize(SPI1, 0);
     LL_SPI_Enable(SPI1);
     LL_SPI_StartMasterTransfer(SPI1);

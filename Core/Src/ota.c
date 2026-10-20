@@ -470,6 +470,7 @@ void Process_Web_OTA(void)
         uint32_t expected_size = strtoul(pSize + 4, NULL, 10);
         uint32_t expected_crc  = strtoul(pCrc  + 5, NULL, 0);
 
+        /* Validasi ukuran maksimal HTML (128 KB) */
         if (expected_size == 0 || expected_size > HTML_FLASH_DATA_MAX)
         {
             const char err[] = "HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\nSize invalid";
@@ -479,7 +480,7 @@ void Process_Web_OTA(void)
             return;
         }
 
-        // Cari \r\n\r\n dengan overlap 4 byte (identik sha256)
+        // Cari \r\n\r\n dengan overlap 4 byte
         uint8_t  html_rx_already_updated = 0;
         uint8_t  html_tail[4] = { 0 };
         char    *pBody = NULL;
@@ -523,7 +524,10 @@ void Process_Web_OTA(void)
             }
         }
 
-        // Erase sektor target HTML
+        /* 1. UNLOCK OctoSPI dari Memory-Mapped mode ke Indirect mode */
+        OCTOSPI1_UnlockMemoryMapped();
+
+        /* 2. Erase sektor target HTML di Flash Eksternal */
         ExtFlash_EraseSector(HTML_FLASH_META_ADDR);
         uint32_t html_sectors = (expected_size + 4095) / 4096;
         for (uint32_t s = 0; s < html_sectors; s++)
@@ -531,7 +535,7 @@ void Process_Web_OTA(void)
             ExtFlash_EraseSector(HTML_FLASH_DATA_ADDR + (s * 4096));
         }
 
-        // Tulis chunk awal body
+        /* 3. Tulis chunk awal body */
         uint16_t header_len      = (uint8_t *)pBody - ram_buffer;
         uint16_t body_in_packet  = fetch - header_len;
         uint32_t bytes_received  = 0;
@@ -560,7 +564,7 @@ void Process_Web_OTA(void)
             while (W5500_ReadReg(Sn_CR,   W5500_S0_REG_OP));
         }
 
-        // Stream sisa payload — selalu baca pointer aktual dari register Sn_RX_RD W5500
+        /* 4. Stream sisa payload langsung ke OctoSPI */
         while (bytes_received < expected_size)
         {
             rx_len = ((uint16_t)W5500_ReadReg(Sn_RX_RSR,     W5500_S0_REG_OP) << 8) |
@@ -602,9 +606,36 @@ void Process_Web_OTA(void)
             while (W5500_ReadReg(Sn_CR,   W5500_S0_REG_OP));
         }
 
-        // Verifikasi CRC & simpan meta
-        if (HtmlFlash_VerifyAndSaveMeta(expected_size, expected_crc))
+        /* 5. LOCK kembali OctoSPI ke Memory-Mapped mode */
+        OCTOSPI1_LockMemoryMapped();
+
+        /* 6. Hitung & Validasi Hardware CRC32 dari Memory-Mapped Flash */
+        CRC->CR = 1;
+        uint32_t words = (expected_size + 3) / 4;
+        uint32_t cur_off = 0;
+        while (words > 0)
         {
+            uint32_t c_w = (words > 16) ? 16 : words;
+            uint8_t  temp[64];
+            uint32_t r_len = c_w * 4;
+            for (uint32_t z = 0; z < r_len; z++) temp[z] = 0xFF;
+            uint32_t real_b = (expected_size > cur_off) ? (expected_size - cur_off) : 0;
+            if (real_b > r_len) real_b = r_len;
+            if (real_b > 0) Flash_ReadBytes(HTML_FLASH_DATA_ADDR + cur_off, temp, real_b);
+            uint32_t *p = (uint32_t *)temp;
+            for (uint32_t w = 0; w < c_w; w++) CRC->DR = p[w];
+            cur_off += r_len;
+            words   -= c_w;
+        }
+
+        if (CRC->DR == expected_crc)
+        {
+            HtmlMeta_t meta;
+            meta.magic = HTML_FLASH_MAGIC;
+            meta.size  = expected_size;
+            meta.crc   = expected_crc;
+            HtmlFlash_WriteMeta(&meta);
+
             const char ok[] = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 15\r\nConnection: close\r\n\r\nHTML tersimpan!";
             W5500_SendTCP((uint8_t *)ok, strlen(ok));
         }
@@ -628,7 +659,7 @@ void Process_Web_OTA(void)
         return;
     }
 
-    /* 5. POST /ota — Upload Firmware OTA (identik sha256) */
+    /* 5. POST /ota — Upload Firmware OTA ke Staging Ext Flash */
     if (strstr((char *)ram_buffer, "POST /ota") == NULL) return;
 
     char *pSize = strstr((char *)ram_buffer, "?sz=");
@@ -637,9 +668,10 @@ void Process_Web_OTA(void)
     uint32_t expected_size = strtoul(pSize + 4, NULL, 10);
     uint32_t expected_crc  = strtoul(pCrc + 5, NULL, 0);
 
+    /* Validasi ukuran maksimal firmware (992 KB) */
     if (expected_size == 0 || expected_size > MAX_FIRMWARE_SIZE)
     {
-        const char err[] = "HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\nSize invalid";
+        const char err[] = "HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\nFirmware size invalid";
         W5500_SendTCP((uint8_t *)err, strlen(err));
         W5500_WriteReg(Sn_CR, W5500_S0_REG_OP, CMD_DISCON);
         while (W5500_ReadReg(Sn_CR, W5500_S0_REG_OP));
@@ -689,9 +721,56 @@ void Process_Web_OTA(void)
         }
     }
 
+    uint16_t header_len      = (uint8_t *)pBody - ram_buffer;
+    uint16_t body_in_packet  = fetch - header_len;
+
+    /* Pastikan minimal 8 byte body tersedia untuk validasi binary vector table */
+    while (body_in_packet < 8)
+    {
+        rx_len = ((uint16_t)W5500_ReadReg(Sn_RX_RSR,     W5500_S0_REG_OP) << 8) |
+                             W5500_ReadReg(Sn_RX_RSR + 1, W5500_S0_REG_OP);
+        if (rx_len == 0) continue;
+        rx_rd = ((uint16_t)W5500_ReadReg(Sn_RX_RD,     W5500_S0_REG_OP) << 8) |
+                            W5500_ReadReg(Sn_RX_RD + 1, W5500_S0_REG_OP);
+        uint16_t grab = (rx_len > (CHUNK_BUFFER_SIZE - body_in_packet)) ? (CHUNK_BUFFER_SIZE - body_in_packet) : rx_len;
+        s_off = rx_rd & W5500_S0_BUF_MASK;
+        W5500_ReadBuf(s_off, W5500_S0_RX_OP, (uint8_t *)pBody + body_in_packet, grab);
+        body_in_packet += grab;
+        rx_rd += grab;
+        W5500_WriteReg(Sn_RX_RD,     W5500_S0_REG_OP, (uint8_t)(rx_rd >> 8));
+        W5500_WriteReg(Sn_RX_RD + 1, W5500_S0_REG_OP, (uint8_t)rx_rd);
+        W5500_WriteReg(Sn_CR,         W5500_S0_REG_OP, CMD_RECV);
+        while (W5500_ReadReg(Sn_CR,   W5500_S0_REG_OP));
+    }
+
+    /* Validasi Binary Header STM32: Initial MSP dan Reset Vector */
+    uint32_t bin_msp = ((uint32_t)((uint8_t *)pBody)[0]) |
+                       (((uint32_t)((uint8_t *)pBody)[1]) << 8) |
+                       (((uint32_t)((uint8_t *)pBody)[2]) << 16) |
+                       (((uint32_t)((uint8_t *)pBody)[3]) << 24);
+    uint32_t bin_rst = ((uint32_t)((uint8_t *)pBody)[4]) |
+                       (((uint32_t)((uint8_t *)pBody)[5]) << 8) |
+                       (((uint32_t)((uint8_t *)pBody)[6]) << 16) |
+                       (((uint32_t)((uint8_t *)pBody)[7]) << 24);
+
+    if (!(((bin_msp & 0xFFFE0000U) == 0x20000000U) && ((bin_msp & 0x03U) == 0U) &&
+          ((bin_rst & 0xFF000000U) == 0x08000000U) && ((bin_rst & 0x01U) == 1U) &&
+          (bin_rst >= 0x08002000UL) && (bin_rst < 0x0807A000UL)))
+    {
+        const char err[] = "HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\nInvalid Firmware Header";
+        W5500_SendTCP((uint8_t *)err, strlen(err));
+        W5500_WriteReg(Sn_CR, W5500_S0_REG_OP, CMD_DISCON);
+        while (W5500_ReadReg(Sn_CR, W5500_S0_REG_OP));
+        return;
+    }
+
     uint32_t target_meta = FLASH_STAGING_META;
     uint32_t target_bin  = FLASH_STAGING_BIN;
 
+    /* 1. UNLOCK OctoSPI dari Memory-Mapped mode ke Indirect mode */
+    OCTOSPI1_UnlockMemoryMapped();
+
+    /* 2. Erase Staging Meta & Bin di Flash Eksternal */
     ExtFlash_EraseSector(target_meta);
     uint32_t sectors = (expected_size + 4095) / 4096;
     for (uint32_t s = 0; s < sectors; s++)
@@ -699,9 +778,8 @@ void Process_Web_OTA(void)
         ExtFlash_EraseSector(target_bin + (s * 4096));
     }
 
-    uint16_t header_len      = (uint8_t *)pBody - ram_buffer;
-    uint16_t body_in_packet  = fetch - header_len;
-    uint32_t bytes_received  = 0;
+    /* 3. Tulis chunk awal body */
+    uint32_t bytes_received = 0;
     if (body_in_packet > 0)
     {
         uint16_t written = 0;
@@ -727,6 +805,7 @@ void Process_Web_OTA(void)
         while (W5500_ReadReg(Sn_CR,   W5500_S0_REG_OP));
     }
 
+    /* 4. Stream sisa payload firmware */
     while (bytes_received < expected_size)
     {
         rx_len = ((uint16_t)W5500_ReadReg(Sn_RX_RSR,     W5500_S0_REG_OP) << 8) |
@@ -768,18 +847,26 @@ void Process_Web_OTA(void)
         while (W5500_ReadReg(Sn_CR,   W5500_S0_REG_OP));
     }
 
+    /* 5. LOCK kembali OctoSPI ke Memory-Mapped mode */
+    OCTOSPI1_LockMemoryMapped();
+
+    /* 6. Hitung & Validasi Hardware CRC32 dari Memory-Mapped Flash */
     CRC->CR = 1;
     uint32_t words = (expected_size + 3) / 4;
-    uint32_t r_addr = target_bin;
+    uint32_t cur_off = 0;
     while (words > 0)
     {
         uint32_t c_w = (words > 16) ? 16 : words;
         uint8_t  temp[64];
-        Flash_ReadBytes(r_addr, temp, c_w * 4);
+        uint32_t r_len = c_w * 4;
+        for (uint32_t z = 0; z < r_len; z++) temp[z] = 0xFF;
+        uint32_t real_b = (expected_size > cur_off) ? (expected_size - cur_off) : 0;
+        if (real_b > r_len) real_b = r_len;
+        if (real_b > 0) Flash_ReadBytes(target_bin + cur_off, temp, real_b);
         uint32_t *p = (uint32_t *)temp;
         for (uint32_t w = 0; w < c_w; w++) CRC->DR = p[w];
-        r_addr += (c_w * 4);
-        words -= c_w;
+        cur_off += r_len;
+        words   -= c_w;
     }
 
     if (CRC->DR == expected_crc)
@@ -793,7 +880,7 @@ void Process_Web_OTA(void)
         meta[5] = (uint8_t)(expected_crc >> 8);
         meta[6] = (uint8_t)(expected_crc >> 16);
         meta[7] = (uint8_t)(expected_crc >> 24);
-        meta[8] = 0xA5; /* STAGING VALID */
+        meta[8] = 0xA5; /* STAGING VALID FLAG */
         ExtFlash_WritePage(target_meta, meta, 10);
 
         const char ok_body[] = "Update OK! Rebooting...";
@@ -818,3 +905,4 @@ void Process_Web_OTA(void)
         while (W5500_ReadReg(Sn_CR, W5500_S0_REG_OP));
     }
 }
+

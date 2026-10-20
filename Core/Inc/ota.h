@@ -26,7 +26,7 @@ extern "C" {
 #define FLASH_STAGING_META    0x00100000U  /* 1 MB offset (Sektor 256) */
 #define FLASH_STAGING_BIN     0x00101000U  /* 1 MB + 4 KB (Sektor 257) */
 
-#define MAX_FIRMWARE_SIZE     (1020UL * 1024UL)
+#define MAX_FIRMWARE_SIZE     (480UL * 1024UL)
 
 /* ==============================================================================
  * FUNGSI PUBLIK OTA / WEB SERVER

@@ -149,22 +149,52 @@ void Process_Web_OTA(void)
         fmt_flt(te_str, sizeof(te_str), g_bl0906_data.total_energy, 4);
         fmt_flt(t_str,  sizeof(t_str),  g_bl0906_data.temperature, 1);
 
-        char c_str[6][12], p_str[6][12];
+        float tot_va = 0.0f;
         for (int i = 0; i < 6; i++) {
-            fmt_flt(c_str[i], sizeof(c_str[i]), g_bl0906_data.current[i], 3);
-            fmt_flt(p_str[i], sizeof(p_str[i]), g_bl0906_data.power[i],   1);
+            tot_va += g_bl0906_data.voltage * g_bl0906_data.current[i];
+        }
+        float abs_tp = (g_bl0906_data.total_power < 0.0f) ? -g_bl0906_data.total_power : g_bl0906_data.total_power;
+        float tot_pf = (tot_va > 0.05f) ? (abs_tp / tot_va) : 0.0f;
+        if (tot_pf > 1.0f) tot_pf = 1.0f;
+
+        char tva_str[16], tpf_str[16];
+        fmt_flt(tva_str, sizeof(tva_str), tot_va, 1);
+        fmt_flt(tpf_str, sizeof(tpf_str), tot_pf, 2);
+
+        char c_str[6][12], p_str[6][12], va_str[6][12], pf_str[6][12], e_str[6][12];
+        for (int i = 0; i < 6; i++) {
+            float va = g_bl0906_data.voltage * g_bl0906_data.current[i];
+            float abs_p = (g_bl0906_data.power[i] < 0.0f) ? -g_bl0906_data.power[i] : g_bl0906_data.power[i];
+            float pf = (va > 0.05f) ? (abs_p / va) : 0.0f;
+            if (pf > 1.0f) pf = 1.0f;
+
+            fmt_flt(c_str[i],  sizeof(c_str[i]),  g_bl0906_data.current[i], 3);
+            fmt_flt(p_str[i],  sizeof(p_str[i]),  g_bl0906_data.power[i],   1);
+            fmt_flt(va_str[i], sizeof(va_str[i]), va,                       1);
+            fmt_flt(pf_str[i], sizeof(pf_str[i]), pf,                       2);
+            fmt_flt(e_str[i],  sizeof(e_str[i]),  g_bl0906_data.energy[i],  3);
         }
 
         uint32_t upt_sec = g_ms_tick / 1000;
-        static char s_json[512];
+        static char s_json[768];
         snprintf(s_json, sizeof(s_json),
-            "{\"u\":%s,\"f\":%s,\"p\":%s,\"e\":%s,\"t\":%s,"
-            "\"c\":[{\"i\":%s,\"w\":%s},{\"i\":%s,\"w\":%s},{\"i\":%s,\"w\":%s},"
-            "{\"i\":%s,\"w\":%s},{\"i\":%s,\"w\":%s},{\"i\":%s,\"w\":%s}],"
+            "{\"u\":%s,\"f\":%s,\"p\":%s,\"va\":%s,\"pf\":%s,\"e\":%s,\"t\":%s,"
+            "\"c\":["
+            "{\"i\":%s,\"w\":%s,\"va\":%s,\"pf\":%s,\"e\":%s},"
+            "{\"i\":%s,\"w\":%s,\"va\":%s,\"pf\":%s,\"e\":%s},"
+            "{\"i\":%s,\"w\":%s,\"va\":%s,\"pf\":%s,\"e\":%s},"
+            "{\"i\":%s,\"w\":%s,\"va\":%s,\"pf\":%s,\"e\":%s},"
+            "{\"i\":%s,\"w\":%s,\"va\":%s,\"pf\":%s,\"e\":%s},"
+            "{\"i\":%s,\"w\":%s,\"va\":%s,\"pf\":%s,\"e\":%s}"
+            "],"
             "\"upt\":%lu,\"on\":%d}",
-            v_str, f_str, tp_str, te_str, t_str,
-            c_str[0], p_str[0], c_str[1], p_str[1], c_str[2], p_str[2],
-            c_str[3], p_str[3], c_str[4], p_str[4], c_str[5], p_str[5],
+            v_str, f_str, tp_str, tva_str, tpf_str, te_str, t_str,
+            c_str[0], p_str[0], va_str[0], pf_str[0], e_str[0],
+            c_str[1], p_str[1], va_str[1], pf_str[1], e_str[1],
+            c_str[2], p_str[2], va_str[2], pf_str[2], e_str[2],
+            c_str[3], p_str[3], va_str[3], pf_str[3], e_str[3],
+            c_str[4], p_str[4], va_str[4], pf_str[4], e_str[4],
+            c_str[5], p_str[5], va_str[5], pf_str[5], e_str[5],
             (unsigned long)upt_sec, g_bl0906_data.is_online ? 1 : 0);
 
         char s_hdr[160];

@@ -109,7 +109,7 @@ static uint8_t s_status_step  = 0;
 // =============================================================================
 // SHARED STATIC BUFFER
 // =============================================================================
-static char     s_json[1024];
+static char     s_json[1536];
 static char     s_time[24];
 static char     s_uptime[16];
 
@@ -203,7 +203,7 @@ static uint16_t write_str(uint8_t *buf, const char *str)
 }
 
 // =============================================================================
-// HELPER: Format uptime "0T00:05:23"
+// HELPER: Format uptime
 // =============================================================================
 static void format_uptime(char *out, uint32_t sec)
 {
@@ -211,11 +211,21 @@ static void format_uptime(char *out, uint32_t sec)
     uint32_t hours = (sec % 86400) / 3600;
     uint32_t mins  = (sec % 3600)  / 60;
     uint32_t secs  = sec % 60;
-    snprintf(out, 16, "%luT%02lu:%02lu:%02lu",
-             (unsigned long)days,
-             (unsigned long)hours,
-             (unsigned long)mins,
-             (unsigned long)secs);
+    if (days > 0)
+    {
+        snprintf(out, 16, "%lud %02lu:%02lu:%02lu",
+                 (unsigned long)days,
+                 (unsigned long)hours,
+                 (unsigned long)mins,
+                 (unsigned long)secs);
+    }
+    else
+    {
+        snprintf(out, 16, "%02lu:%02lu:%02lu",
+                 (unsigned long)hours,
+                 (unsigned long)mins,
+                 (unsigned long)secs);
+    }
 }
 
 // =============================================================================
@@ -393,16 +403,36 @@ static void publish_sensor(void)
     fmt_f(te_str, sizeof(te_str), g_bl0906_data.total_energy, 3);
     fmt_f(t_str,  sizeof(t_str),  g_bl0906_data.temperature,  1);
 
-    static char ch[6][96];
+    float tot_va = 0.0f;
+    for (int i = 0; i < 6; i++) {
+        tot_va += g_bl0906_data.voltage * g_bl0906_data.current[i];
+    }
+    float abs_tp = (g_bl0906_data.total_power < 0.0f) ? -g_bl0906_data.total_power : g_bl0906_data.total_power;
+    float tot_pf = (tot_va > 0.05f) ? (abs_tp / tot_va) : 0.0f;
+    if (tot_pf > 1.0f) tot_pf = 1.0f;
+
+    char tva_str[16], tpf_str[16];
+    fmt_f(tva_str, sizeof(tva_str), tot_va, 1);
+    fmt_f(tpf_str, sizeof(tpf_str), tot_pf, 2);
+
+    static char ch[6][160];
     for (int i = 0; i < 6; i++)
     {
-        char c_buf[16], p_buf[16], e_buf[16];
-        fmt_f(c_buf, sizeof(c_buf), g_bl0906_data.current[i], 3);
-        fmt_f(p_buf, sizeof(p_buf), g_bl0906_data.power[i],   1);
-        fmt_f(e_buf, sizeof(e_buf), g_bl0906_data.energy[i],  3);
+        float va = g_bl0906_data.voltage * g_bl0906_data.current[i];
+        float abs_p = (g_bl0906_data.power[i] < 0.0f) ? -g_bl0906_data.power[i] : g_bl0906_data.power[i];
+        float pf = (va > 0.05f) ? (abs_p / va) : 0.0f;
+        if (pf > 1.0f) pf = 1.0f;
+
+        char c_buf[16], p_buf[16], va_buf[16], pf_buf[16], e_buf[16];
+        fmt_f(c_buf,  sizeof(c_buf),  g_bl0906_data.current[i], 3);
+        fmt_f(p_buf,  sizeof(p_buf),  g_bl0906_data.power[i],   1);
+        fmt_f(va_buf, sizeof(va_buf), va,                       1);
+        fmt_f(pf_buf, sizeof(pf_buf), pf,                       2);
+        fmt_f(e_buf,  sizeof(e_buf),  g_bl0906_data.energy[i],  3);
+
         snprintf(ch[i], sizeof(ch[i]),
-                 "\"CH%d\":{\"Current\":%s,\"Power\":%s,\"Energy\":%s}",
-                 i + 1, c_buf, p_buf, e_buf);
+                 "\"CH%d\":{\"Current\":%s,\"Power\":%s,\"ApparentPower\":%s,\"Factor\":%s,\"Energy\":%s}",
+                 i + 1, c_buf, p_buf, va_buf, pf_buf, e_buf);
     }
 
     snprintf(s_json, sizeof(s_json),
@@ -412,6 +442,8 @@ static void publish_sensor(void)
             "\"Voltage\":%s,"
             "\"Frequency\":%s,"
             "\"TotalPower\":%s,"
+            "\"ApparentPower\":%s,"
+            "\"Factor\":%s,"
             "\"TotalEnergy\":%s,"
             "%s,%s,%s,%s,%s,%s"
         "},"
@@ -422,7 +454,7 @@ static void publish_sensor(void)
         "}"
         "}",
         s_time,
-        v_str, f_str, tp_str, te_str,
+        v_str, f_str, tp_str, tva_str, tpf_str, te_str,
         ch[0], ch[1], ch[2], ch[3], ch[4], ch[5],
         t_str,
         g_bl0906_data.is_online ? "Online" : "Offline",
@@ -458,7 +490,7 @@ static void publish_info(const MqttConfig_t *cfg)
     MqttConfig_BuildTopic(cfg, "tele", tele_base, sizeof(tele_base));
     snprintf(s_info_topic, sizeof(s_info_topic), "%sINFO1", tele_base);
     snprintf(s_json, sizeof(s_json),
-        "{\"Info1\":{\"Module\":\"STM32F103+W5500\",\"Version\":\"1.0.0\","
+        "{\"Info1\":{\"Module\":\"STM32H523+W5500\",\"Version\":\"14.4.1\","
         "\"FallbackTopic\":\"cmnd/%s_fb/\",\"GroupTopic\":\"cmnd/stm32s/\"}}",
         cfg->topic);
     MQTT_Publish(s_info_topic, (uint8_t *)s_json, (uint16_t)strlen(s_json));
@@ -470,7 +502,7 @@ static void publish_info(const MqttConfig_t *cfg)
     MQTT_Publish(s_info_topic, (uint8_t *)s_json, (uint16_t)strlen(s_json));
     snprintf(s_info_topic, sizeof(s_info_topic), "%sINFO3", tele_base);
     snprintf(s_json, sizeof(s_json),
-        "{\"Info3\":{\"RestartReason\":\"Power on\",\"BootCount\":1}}");
+        "{\"Info3\":{\"RestartReason\":\"Software/Power-on\",\"BootCount\":1}}");
     MQTT_Publish(s_info_topic, (uint8_t *)s_json, (uint16_t)strlen(s_json));
 }
 
@@ -515,7 +547,7 @@ static void publish_status_n(const MqttConfig_t *cfg, uint8_t n)
             format_uptime(s_uptime, s_uptime_sec);
             snprintf(s_json, sizeof(s_json),
                 "{\"StatusPRM\":{\"OtaUrl\":\"http://%s/ota\","
-                "\"RestartReason\":\"Power on\","
+                "\"RestartReason\":\"Software/Power-on\","
                 "\"Uptime\":\"%s\",\"UptimeSec\":%lu,"
                 "\"Sleep\":0,\"BootCount\":1,"
                 "\"TelePeriod\":%d}}",
@@ -523,10 +555,10 @@ static void publish_status_n(const MqttConfig_t *cfg, uint8_t n)
             break;
         case 2:
             snprintf(s_json, sizeof(s_json),
-                "{\"StatusFWR\":{\"Version\":\"1.0.0(stm32-w5500)\","
-                "\"BuildDateTime\":\"2026-09-30T00:00:00\","
-                "\"CpuFrequency\":72,\"Hardware\":\"STM32F103C8T6\","
-                "\"Core\":\"LL Driver\"}}");
+                "{\"StatusFWR\":{\"Version\":\"14.4.1(stm32h523)\","
+                "\"BuildDateTime\":\"2026-10-20T14:30:00\","
+                "\"CpuFrequency\":250,\"Hardware\":\"STM32H523CET6\","
+                "\"Core\":\"ARM Cortex-M33 LL\"}}");
             break;
         case 3:
             snprintf(s_json, sizeof(s_json),
@@ -537,10 +569,10 @@ static void publish_status_n(const MqttConfig_t *cfg, uint8_t n)
             break;
         case 4:
             snprintf(s_json, sizeof(s_json),
-                "{\"StatusMEM\":{\"ProgramSize\":34,"
-                "\"FlashSize\":8192,\"FlashChipId\":\"W25Q64\","
-                "\"FlashFrequency\":36,\"FlashMode\":\"SPI\","
-                "\"RAM\":20,\"RAMFree\":16}}");
+                "{\"StatusMEM\":{\"ProgramSize\":64,"
+                "\"FlashSize\":512,\"FlashChipId\":\"MX25L25635F\","
+                "\"FlashFrequency\":125,\"FlashMode\":\"OctoSPI\","
+                "\"RAM\":256,\"RAMFree\":220}}");
             break;
         case 5:
             snprintf(s_json, sizeof(s_json),

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>STM32H523 - Tsamota</title>
 <link rel="icon" href="data:,">
-<style>*{box-sizing:border-box}body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#1e1e1e;color:#ddd;margin:0;padding:0;font-size:13px}.wrap{max-width:440px;margin:0 auto;padding:14px 12px 30px}.hdr{text-align:center;margin-bottom:12px}.hdr h2{margin:0;font-size:16px;color:#fff}.hdr h3{margin:2px 0;font-size:14px;font-weight:400;color:#bbb}.hdr .sub{font-size:11px;color:#777}.title{font-size:12px;font-weight:700;color:#1fa3ec;text-transform:uppercase;letter-spacing:1px;text-align:center;margin:10px 0 12px;border-top:1px solid #333;border-bottom:1px solid #333;padding:4px 0}.v{display:none}.v.on{display:block}.card{background:#252525;border:1px solid #333;border-radius:4px;padding:10px 12px;margin-bottom:12px}.stitle{font-size:11px;font-weight:700;color:#1fa3ec;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}.dot{width:7px;height:7px;background:#4caf50;border-radius:50%;display:inline-block;box-shadow:0 0 5px #4caf50}.stbl{width:100%;border-collapse:collapse;font-size:12px}.stbl tr{border-bottom:1px solid #2d2d2d}.stbl tr:last-child{border-bottom:none}.stbl td{padding:4px 2px}.stbl td.l{color:#aaa}.stbl td.r{text-align:right;font-weight:600;color:#fff;font-family:Consolas,monospace}.stbl td.r span{color:#888;font-size:10px;font-weight:400;margin-left:2px}.stbl td.r.hl{color:#1fa3ec}.badge{padding:1px 4px;background:#1a3a4a;color:#1fa3ec;border-radius:3px;font-size:10px;font-weight:700;margin-right:3px}.btns{display:flex;flex-direction:column;gap:7px}.btn{width:100%;padding:9px;border:none;border-radius:3px;font-size:13px;font-weight:600;cursor:pointer;text-align:center}.btn:active{transform:translateY(1px)}.btn-b{background:#1fa3ec;color:#fff}.btn-b:hover{background:#1b8fd4}.btn-r{background:#d43f3a;color:#fff}.btn-r:hover{background:#c9302c}.btn-g{background:#444;color:#ddd}.btn-g:hover{background:#555}.btn-ok{background:#4caf50;color:#fff}.btn-ok:hover{background:#43a047}.fld{margin-bottom:8px}.fld label{display:block;font-size:11px;color:#aaa;margin-bottom:2px}.fld input,.fld select{width:100%;padding:6px 8px;background:#1e1e1e;border:1px solid #444;border-radius:3px;color:#eee;font-size:12px;outline:none}.fld input:focus{border-color:#1fa3ec}.fld .h{font-size:10px;color:#666;margin-top:2px}.r2{display:flex;gap:8px}.r2 .fld{flex:1}.tog{display:flex;align-items:center;gap:6px;padding:3px 0}.tog input{width:15px;height:15px;accent-color:#1fa3ec}.tog label{font-size:12px;color:#ccc;cursor:pointer}.box{background:#1a1a1a;border:1px solid #333;border-radius:3px;padding:6px 8px;font-size:11px;font-family:Consolas,monospace;color:#999;margin-top:4px}.box b{color:#1fa3ec}.itbl{width:100%;border-collapse:collapse;margin:8px 0 16px;font-size:12px;text-align:left}.itbl hr{border:0;border-top:1px solid #3a3a3a;margin:6px 0}.itbl td{padding:3px 0;vertical-align:top}.itbl td.k{color:#aaa;width:48%;font-weight:400}.itbl td.v{color:#fff;font-family:Consolas,monospace;word-break:break-all}.msg{margin-top:8px;padding:7px 9px;border-radius:3px;font-size:11px;display:none;text-align:center}.msg-ok{background:#1e3d1e;color:#4caf50;border:1px solid #2e5c2e}.msg-err{background:#3d1e1e;color:#f44336;border:1px solid #5c2e2e}.msg-info{background:#1e2d3d;color:#2196f3;border:1px solid #2e3d5c}.lbox{background:#141414;border:1px solid #333;border-radius:3px;padding:6px;font-size:10px;font-family:Consolas,monospace;color:#999;max-height:120px;overflow-y:auto}.lbox div{padding:1px 0;border-bottom:1px solid #222}.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:99;align-items:center;justify-content:center}.modal.on{display:flex}.mcard{background:#252525;border:1px solid #444;border-radius:4px;max-width:300px;width:90%;padding:14px;text-align:center}.ftr{text-align:center;margin-top:16px;font-size:10px;color:#555}.ftr a{color:#777;text-decoration:none}
+<style>*{box-sizing:border-box}body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#1e1e1e;color:#ddd;margin:0;padding:0;font-size:13px}.wrap{max-width:440px;margin:0 auto;padding:14px 12px 30px}.hdr{text-align:center;margin-bottom:12px}.hdr h2{margin:0;font-size:16px;color:#fff}.hdr h3{margin:2px 0;font-size:14px;font-weight:400;color:#bbb}.hdr .sub{font-size:11px;color:#777}.title{font-size:12px;font-weight:700;color:#1fa3ec;text-transform:uppercase;letter-spacing:1px;text-align:center;margin:10px 0 12px;border-top:1px solid #333;border-bottom:1px solid #333;padding:4px 0}div.v{display:none}div.v.on{display:block}.card{background:#252525;border:1px solid #333;border-radius:4px;padding:10px 12px;margin-bottom:12px}.stitle{font-size:11px;font-weight:700;color:#1fa3ec;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}.dot{width:7px;height:7px;background:#4caf50;border-radius:50%;display:inline-block;box-shadow:0 0 5px #4caf50}.stbl{width:100%;border-collapse:collapse;font-size:12px}.stbl tr{border-bottom:1px solid #2d2d2d}.stbl tr:last-child{border-bottom:none}.stbl td{padding:4px 2px}.stbl td.l{color:#aaa}.stbl td.r{text-align:right;font-weight:600;color:#fff;font-family:Consolas,monospace}.stbl td.r span{color:#888;font-size:10px;font-weight:400;margin-left:2px}.stbl td.r.hl{color:#1fa3ec}.badge{padding:1px 4px;background:#1a3a4a;color:#1fa3ec;border-radius:3px;font-size:10px;font-weight:700;margin-right:3px}.btns{display:flex;flex-direction:column;gap:7px}.btn{width:100%;padding:9px;border:none;border-radius:3px;font-size:13px;font-weight:600;cursor:pointer;text-align:center}.btn:active{transform:translateY(1px)}.btn-b{background:#1fa3ec;color:#fff}.btn-b:hover{background:#1b8fd4}.btn-r{background:#d43f3a;color:#fff}.btn-r:hover{background:#c9302c}.btn-g{background:#444;color:#ddd}.btn-g:hover{background:#555}.btn-ok{background:#4caf50;color:#fff}.btn-ok:hover{background:#43a047}.fld{margin-bottom:8px}.fld label{display:block;font-size:11px;color:#aaa;margin-bottom:2px}.fld input,.fld select{width:100%;padding:6px 8px;background:#1e1e1e;border:1px solid #444;border-radius:3px;color:#eee;font-size:12px;outline:none}.fld input:focus{border-color:#1fa3ec}.fld .h{font-size:10px;color:#666;margin-top:2px}.r2{display:flex;gap:8px}.r2 .fld{flex:1}.tog{display:flex;align-items:center;gap:6px;padding:3px 0}.tog input{width:15px;height:15px;accent-color:#1fa3ec}.tog label{font-size:12px;color:#ccc;cursor:pointer}.box{background:#1a1a1a;border:1px solid #333;border-radius:3px;padding:6px 8px;font-size:11px;font-family:Consolas,monospace;color:#999;margin-top:4px}.box b{color:#1fa3ec}.itbl{width:100%;border-collapse:collapse;margin:8px 0 16px;font-size:12px;text-align:left}.itbl hr{border:0;border-top:1px solid #3a3a3a;margin:6px 0}.itbl td{padding:3px 0;vertical-align:top}.itbl td.k{color:#aaa;width:48%;font-weight:400}.itbl td.val{color:#fff;font-family:Consolas,monospace;word-break:break-all}.msg{margin-top:8px;padding:7px 9px;border-radius:3px;font-size:11px;display:none;text-align:center}.msg-ok{background:#1e3d1e;color:#4caf50;border:1px solid #2e5c2e}.msg-err{background:#3d1e1e;color:#f44336;border:1px solid #5c2e2e}.msg-info{background:#1e2d3d;color:#2196f3;border:1px solid #2e3d5c}.lbox{background:#141414;border:1px solid #333;border-radius:3px;padding:6px;font-size:10px;font-family:Consolas,monospace;color:#999;max-height:120px;overflow-y:auto}.lbox div{padding:1px 0;border-bottom:1px solid #222}.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:99;align-items:center;justify-content:center}.modal.on{display:flex}.mcard{background:#252525;border:1px solid #444;border-radius:4px;max-width:300px;width:90%;padding:14px;text-align:center}.ftr{text-align:center;margin-top:16px;font-size:10px;color:#555}.ftr a{color:#777;text-decoration:none}
 .gpio-stage{background:#111215;background-image:radial-gradient(#2a2d36 1px,transparent 1px);background-size:12px 12px;border:1px solid #333;border-radius:4px;padding:12px 6px;margin-bottom:10px}
 .dev-board{background:#1a1c22;border:2px solid #2d3340;border-radius:6px;padding:10px 8px;position:relative;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
 .board-hdr{text-align:center;border-bottom:1px solid #2a2e39;padding-bottom:6px;margin-bottom:10px}
@@ -55,15 +55,72 @@
         <tr><td class="l">Voltage</td><td class="r hl"><span id="v-u">220.4</span><span>V</span></td></tr>
         <tr><td class="l">Frequency</td><td class="r"><span id="v-f">50.0</span><span>Hz</span></td></tr>
         <tr><td class="l">Active Power</td><td class="r hl"><span id="v-p">345.8</span><span>W</span></td></tr>
-        <tr><td class="l">Total Energy</td><td class="r"><span id="v-e">12.45</span><span>kWh</span></td></tr>
-        <tr><td class="l"><span class="badge">CH1</span> Channel 1</td><td class="r"><span id="c1-i">0.45</span><span>A</span> | <span id="c1-w">99.0</span><span>W</span></td></tr>
-        <tr><td class="l"><span class="badge">CH2</span> Channel 2</td><td class="r"><span id="c2-i">1.12</span><span>A</span> | <span id="c2-w">246.8</span><span>W</span></td></tr>
-        <tr><td class="l"><span class="badge">CH3</span> Channel 3</td><td class="r"><span id="c3-i">0.00</span><span>A</span> | <span id="c3-w">0.0</span><span>W</span></td></tr>
-        <tr><td class="l"><span class="badge">CH4</span> Channel 4</td><td class="r"><span id="c4-i">0.00</span><span>A</span> | <span id="c4-w">0.0</span><span>W</span></td></tr>
-        <tr><td class="l"><span class="badge">CH5</span> Channel 5</td><td class="r"><span id="c5-i">0.00</span><span>A</span> | <span id="c5-w">0.0</span><span>W</span></td></tr>
-        <tr><td class="l"><span class="badge">CH6</span> Channel 6</td><td class="r"><span id="c6-i">0.00</span><span>A</span> | <span id="c6-w">0.0</span><span>W</span></td></tr>
+        <tr><td class="l">Apparent Power</td><td class="r"><span id="v-va">350.2</span><span>VA</span></td></tr>
+        <tr><td class="l">Power Factor</td><td class="r"><span id="v-pf">0.99</span></td></tr>
+        <tr><td class="l">Total Energy</td><td class="r hl"><span id="v-e">12.450</span><span>kWh</span></td></tr>
         <tr><td class="l">BL0906 Temperature</td><td class="r"><span id="v-t">36.5</span><span>&deg;C</span></td></tr>
-        <tr><td class="l">Uptime</td><td class="r" id="v-upt" style="color:#aaa">0T04:12:35</td></tr>
+        <tr><td class="l">Uptime</td><td class="r" id="v-upt" style="color:#aaa">00:00:00</td></tr>
+        <tr style="border-top:2px solid #383838"><td colspan="2" style="padding:6px 0 2px;font-size:10px;font-weight:700;color:#1fa3ec;letter-spacing:1px;text-transform:uppercase">6-Channel AC Metering</td></tr>
+        <tr>
+          <td class="l" style="vertical-align:middle;padding:5px 2px">
+            <div><span class="badge">CH1</span> Channel 1</div>
+            <div style="font-size:10px;color:#888;margin-top:2px"><span id="c1-va">0.0</span> VA &bull; PF: <span id="c1-pf">0.00</span></div>
+          </td>
+          <td class="r" style="vertical-align:middle;padding:5px 2px">
+            <div><span id="c1-i">0.000</span><span>A</span> | <span id="c1-w" class="hl">0.0</span><span>W</span></div>
+            <div style="font-size:10px;color:#1fa3ec;margin-top:2px"><span id="c1-e">0.000</span> <span style="color:#777">kWh</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="l" style="vertical-align:middle;padding:5px 2px">
+            <div><span class="badge">CH2</span> Channel 2</div>
+            <div style="font-size:10px;color:#888;margin-top:2px"><span id="c2-va">0.0</span> VA &bull; PF: <span id="c2-pf">0.00</span></div>
+          </td>
+          <td class="r" style="vertical-align:middle;padding:5px 2px">
+            <div><span id="c2-i">0.000</span><span>A</span> | <span id="c2-w" class="hl">0.0</span><span>W</span></div>
+            <div style="font-size:10px;color:#1fa3ec;margin-top:2px"><span id="c2-e">0.000</span> <span style="color:#777">kWh</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="l" style="vertical-align:middle;padding:5px 2px">
+            <div><span class="badge">CH3</span> Channel 3</div>
+            <div style="font-size:10px;color:#888;margin-top:2px"><span id="c3-va">0.0</span> VA &bull; PF: <span id="c3-pf">0.00</span></div>
+          </td>
+          <td class="r" style="vertical-align:middle;padding:5px 2px">
+            <div><span id="c3-i">0.000</span><span>A</span> | <span id="c3-w" class="hl">0.0</span><span>W</span></div>
+            <div style="font-size:10px;color:#1fa3ec;margin-top:2px"><span id="c3-e">0.000</span> <span style="color:#777">kWh</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="l" style="vertical-align:middle;padding:5px 2px">
+            <div><span class="badge">CH4</span> Channel 4</div>
+            <div style="font-size:10px;color:#888;margin-top:2px"><span id="c4-va">0.0</span> VA &bull; PF: <span id="c4-pf">0.00</span></div>
+          </td>
+          <td class="r" style="vertical-align:middle;padding:5px 2px">
+            <div><span id="c4-i">0.000</span><span>A</span> | <span id="c4-w" class="hl">0.0</span><span>W</span></div>
+            <div style="font-size:10px;color:#1fa3ec;margin-top:2px"><span id="c4-e">0.000</span> <span style="color:#777">kWh</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="l" style="vertical-align:middle;padding:5px 2px">
+            <div><span class="badge">CH5</span> Channel 5</div>
+            <div style="font-size:10px;color:#888;margin-top:2px"><span id="c5-va">0.0</span> VA &bull; PF: <span id="c5-pf">0.00</span></div>
+          </td>
+          <td class="r" style="vertical-align:middle;padding:5px 2px">
+            <div><span id="c5-i">0.000</span><span>A</span> | <span id="c5-w" class="hl">0.0</span><span>W</span></div>
+            <div style="font-size:10px;color:#1fa3ec;margin-top:2px"><span id="c5-e">0.000</span> <span style="color:#777">kWh</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="l" style="vertical-align:middle;padding:5px 2px">
+            <div><span class="badge">CH6</span> Channel 6</div>
+            <div style="font-size:10px;color:#888;margin-top:2px"><span id="c6-va">0.0</span> VA &bull; PF: <span id="c6-pf">0.00</span></div>
+          </td>
+          <td class="r" style="vertical-align:middle;padding:5px 2px">
+            <div><span id="c6-i">0.000</span><span>A</span> | <span id="c6-w" class="hl">0.0</span><span>W</span></div>
+            <div style="font-size:10px;color:#1fa3ec;margin-top:2px"><span id="c6-e">0.000</span> <span style="color:#777">kWh</span></div>
+          </td>
+        </tr>
       </table>
     </div>
     <div class="btns">
@@ -160,47 +217,47 @@
   <div class="v" id="v-info">
     <div class="title">Information</div>
     <table class="itbl">
-      <tr><td class="k">Program Version</td><td class="v">Tsamota 14.4.1 (release-stm32)</td></tr>
-      <tr><td class="k">Build Date &amp; Time</td><td class="v">2026-10-19T14:40:00</td></tr>
-      <tr><td class="k">Core/SDK Version</td><td class="v">STM32CubeH5 v1.3.0 / CMSIS</td></tr>
-      <tr><td class="k">Uptime</td><td class="v" id="i-upt">0T04:12:35</td></tr>
-      <tr><td class="k">Flash Write Count</td><td class="v">12</td></tr>
-      <tr><td class="k">Boot Count</td><td class="v">5</td></tr>
-      <tr><td class="k">Restart Reason</td><td class="v">Software reset (NVIC)</td></tr>
+      <tr><td class="k">Program Version</td><td class="val">Tsamota 14.4.1 (release-stm32)</td></tr>
+      <tr><td class="k">Build Date &amp; Time</td><td class="val">2026-10-20T14:30:00</td></tr>
+      <tr><td class="k">Core/SDK Version</td><td class="val">STM32CubeH5 v1.3.0 / ARM CMSIS-Core</td></tr>
+      <tr><td class="k">Uptime</td><td class="val" id="i-upt">--</td></tr>
+      <tr><td class="k">Flash Write Count</td><td class="val">12</td></tr>
+      <tr><td class="k">Boot Count</td><td class="val">1</td></tr>
+      <tr><td class="k">Restart Reason</td><td class="val">Software reset / Power-on</td></tr>
       <tr><td colspan="2"><hr></td></tr>
-      <tr><td class="k">Hostname</td><td class="v" id="i-host">tsamota-AF67F8</td></tr>
-      <tr><td class="k">MAC Address</td><td class="v">A8:42:E3:AF:67:F8</td></tr>
-      <tr><td class="k">IP Address (Ethernet)</td><td class="v" id="i-ip">172.155.0.87</td></tr>
-      <tr><td class="k">Gateway</td><td class="v" id="i-gw">172.155.0.1</td></tr>
-      <tr><td class="k">Subnet Mask</td><td class="v" id="i-sub">255.255.255.0</td></tr>
-      <tr><td class="k">DNS Server1</td><td class="v" id="i-dns1">172.155.0.1</td></tr>
-      <tr><td class="k">DNS Server2</td><td class="v">0.0.0.0</td></tr>
-      <tr><td class="k">HTTP API</td><td class="v">Enabled</td></tr>
+      <tr><td class="k">Hostname</td><td class="val" id="i-host">tsamota-H523</td></tr>
+      <tr><td class="k">MAC Address</td><td class="val" id="i-mac">00:08:DC:11:22:33</td></tr>
+      <tr><td class="k">IP Address (Ethernet)</td><td class="val" id="i-ip">172.155.0.87</td></tr>
+      <tr><td class="k">Gateway</td><td class="val" id="i-gw">172.155.0.1</td></tr>
+      <tr><td class="k">Subnet Mask</td><td class="val" id="i-sub">255.255.255.0</td></tr>
+      <tr><td class="k">DNS Server1</td><td class="val" id="i-dns1">172.155.0.1</td></tr>
+      <tr><td class="k">DNS Server2</td><td class="val">8.8.8.8</td></tr>
+      <tr><td class="k">HTTP API</td><td class="val">Enabled (JSON /sensor, /config)</td></tr>
       <tr><td colspan="2"><hr></td></tr>
-      <tr><td class="k">MQTT Host</td><td class="v" id="i-mq-h">192.168.1.100</td></tr>
-      <tr><td class="k">MQTT Port</td><td class="v" id="i-mq-p">1883</td></tr>
-      <tr><td class="k">MQTT TLS</td><td class="v">Disabled</td></tr>
-      <tr><td class="k">MQTT User</td><td class="v" id="i-mq-u">DVES_USER</td></tr>
-      <tr><td class="k">MQTT Client</td><td class="v" id="i-mq-c">STM32_W5500</td></tr>
-      <tr><td class="k">MQTT Topic</td><td class="v" id="i-mq-t">stm32</td></tr>
-      <tr><td class="k">MQTT Group Topic 1</td><td class="v">cmnd/tsamotas/</td></tr>
-      <tr><td class="k">MQTT Full Topic</td><td class="v" id="i-mq-ft">cmnd/stm32/</td></tr>
-      <tr><td class="k">MQTT Fallback Topic</td><td class="v">cmnd/STM32_AF67F8_fb/</td></tr>
-      <tr><td class="k">MQTT No Retain</td><td class="v">Disabled</td></tr>
+      <tr><td class="k">MQTT Host</td><td class="val" id="i-mq-h">192.168.1.100</td></tr>
+      <tr><td class="k">MQTT Port</td><td class="val" id="i-mq-p">1883</td></tr>
+      <tr><td class="k">MQTT TLS</td><td class="val">Disabled</td></tr>
+      <tr><td class="k">MQTT User</td><td class="val" id="i-mq-u">(none)</td></tr>
+      <tr><td class="k">MQTT Client</td><td class="val" id="i-mq-c">STM32_W5500</td></tr>
+      <tr><td class="k">MQTT Topic</td><td class="val" id="i-mq-t">stm32</td></tr>
+      <tr><td class="k">MQTT Group Topic 1</td><td class="val">cmnd/stm32s/</td></tr>
+      <tr><td class="k">MQTT Full Topic</td><td class="val" id="i-mq-ft">cmnd/stm32/</td></tr>
+      <tr><td class="k">MQTT Fallback Topic</td><td class="val" id="i-mq-fb">cmnd/stm32_fb/</td></tr>
+      <tr><td class="k">MQTT No Retain</td><td class="val">Disabled</td></tr>
       <tr><td colspan="2"><hr></td></tr>
-      <tr><td class="k">Emulation</td><td class="v">None</td></tr>
-      <tr><td class="k">mDNS Discovery</td><td class="v">Disabled</td></tr>
+      <tr><td class="k">Emulation</td><td class="val">None</td></tr>
+      <tr><td class="k">mDNS Discovery</td><td class="val">Disabled</td></tr>
       <tr><td colspan="2"><hr></td></tr>
-      <tr><td class="k">MCU Core</td><td class="v">STM32H523CET6 (ARM Cortex-M33)</td></tr>
-      <tr><td class="k">CPU Frequency</td><td class="v">250 MHz (PLL1)</td></tr>
-      <tr><td class="k">UID 96-bit</td><td class="v">003E002B 5431500C 20383742</td></tr>
-      <tr><td class="k">Flash Size</td><td class="v">512 KB</td></tr>
-      <tr><td class="k">Program Flash Size</td><td class="v">512 KB</td></tr>
-      <tr><td class="k">Program Size</td><td class="v">33 KB (7%)</td></tr>
-      <tr><td class="k">Free Program Space</td><td class="v">479 KB (93%)</td></tr>
-      <tr><td class="k">Free Memory</td><td class="v">232 KB (SRAM)</td></tr>
-      <tr><td class="k">External Flash (SPI)</td><td class="v">W25Qxx 16 MB</td></tr>
-      <tr><td class="k">Partition fs (SPI)</td><td class="v">128 KB (dashboard.html)</td></tr>
+      <tr><td class="k">MCU Core</td><td class="val">STM32H523CET6 (ARM Cortex-M33)</td></tr>
+      <tr><td class="k">CPU Frequency</td><td class="val">250 MHz (PLL1)</td></tr>
+      <tr><td class="k">UID 96-bit</td><td class="val">003E002B 5431500C 20383742</td></tr>
+      <tr><td class="k">Flash Size</td><td class="val">512 KB Internal Flash</td></tr>
+      <tr><td class="k">Program Flash Size</td><td class="val">512 KB</td></tr>
+      <tr><td class="k">Program Size</td><td class="val">~64 KB (12%)</td></tr>
+      <tr><td class="k">Free Program Space</td><td class="val">448 KB (88%)</td></tr>
+      <tr><td class="k">Free Memory</td><td class="val">220 KB (SRAM 256KB)</td></tr>
+      <tr><td class="k">External Flash (SPI)</td><td class="val">Macronix MX25L25635F 32 MB (OctoSPI @ 0x90000000)</td></tr>
+      <tr><td class="k">Partition fs (SPI)</td><td class="val">128 KB (dashboard.html @ 0x90211000)</td></tr>
     </table>
     <div class="btns"><button class="btn btn-b" onclick="go('main')">Main Menu</button></div>
   </div>
@@ -369,24 +426,40 @@ async function tickSensors(){
     var r=await fetch('/sensor');
     if(!r.ok)return;
     var d=await r.json();
+    var u=(d.u!==undefined)?d.u:0;
     document.getElementById('v-u').innerText=(d.u!==undefined)?d.u.toFixed(1):'--';
     document.getElementById('v-f').innerText=(d.f!==undefined)?d.f.toFixed(1):'--';
     document.getElementById('v-p').innerText=(d.p!==undefined)?d.p.toFixed(1):'--';
     document.getElementById('v-e').innerText=(d.e!==undefined)?d.e.toFixed(3):'--';
     document.getElementById('v-t').innerText=(d.t!==undefined)?d.t.toFixed(1):'--';
     var ct=document.getElementById('g-chip-temp');if(ct&&d.t!==undefined)ct.innerText=d.t.toFixed(1)+' \u00B0C';
+    var totVa = 0;
     if(d.c&&d.c.length){
       for(var i=0;i<6;i++){
+        var ch=d.c[i];
+        if(!ch)continue;
+        var va = (ch.va!==undefined) ? ch.va : (u * (ch.i||0));
+        totVa += va;
         var ci=document.getElementById('c'+(i+1)+'-i');
         var cw=document.getElementById('c'+(i+1)+'-w');
-        if(ci&&d.c[i])ci.innerText=d.c[i].i.toFixed(2);
-        if(cw&&d.c[i])cw.innerText=d.c[i].w.toFixed(1);
+        var cva=document.getElementById('c'+(i+1)+'-va');
+        var cpf=document.getElementById('c'+(i+1)+'-pf');
+        var ce=document.getElementById('c'+(i+1)+'-e');
+        if(ci&&ch.i!==undefined)ci.innerText=ch.i.toFixed(3);
+        if(cw&&ch.w!==undefined)cw.innerText=ch.w.toFixed(1);
+        if(cva)cva.innerText=va.toFixed(1);
+        if(cpf)cpf.innerText=(ch.pf!==undefined)?ch.pf.toFixed(2):((va>0.05)?Math.min(1.0,Math.abs(ch.w)/(va)).toFixed(2):'0.00');
+        if(ce&&ch.e!==undefined)ce.innerText=ch.e.toFixed(3);
       }
     }
+    var finalVa = (d.va!==undefined) ? d.va : totVa;
+    var finalPf = (d.pf!==undefined) ? d.pf : ((finalVa>0.05 && d.p!==undefined) ? Math.min(1.0, Math.abs(d.p)/finalVa) : 0);
+    var vaEl=document.getElementById('v-va');if(vaEl)vaEl.innerText=finalVa.toFixed(1);
+    var pfEl=document.getElementById('v-pf');if(pfEl)pfEl.innerText=finalPf.toFixed(2);
     if(d.upt!==undefined){
       var s=d.upt;
       var days=Math.floor(s/86400),hrs=Math.floor((s%86400)/3600),mins=Math.floor((s%3600)/60),secs=s%60;
-      var uptStr=days+'T'+('0'+hrs).slice(-2)+':'+('0'+mins).slice(-2)+':'+('0'+secs).slice(-2);
+      var uptStr=(days>0 ? days+' hari ' : '') + ('0'+hrs).slice(-2)+':'+('0'+mins).slice(-2)+':'+('0'+secs).slice(-2);
       var uEl=document.getElementById('v-upt');if(uEl)uEl.innerText=uptStr;
       var iuEl=document.getElementById('i-upt');if(iuEl)iuEl.innerText=uptStr;
     }
@@ -505,11 +578,15 @@ function updateInfoPage(){
   var mc=document.getElementById('c-cid')?document.getElementById('c-cid').value:'STM32_W5500';
   var mt=document.getElementById('c-topic')?document.getElementById('c-topic').value:'stm32';
   var mft=document.getElementById('c-ftopic')?document.getElementById('c-ftopic').value:'%prefix%/%topic%/';
+  var mu=document.getElementById('c-user')?document.getElementById('c-user').value:'';
+  if(document.getElementById('i-host'))document.getElementById('i-host').innerText='tsamota-'+(mc||'H523');
   if(document.getElementById('i-mq-h'))document.getElementById('i-mq-h').innerText=mh||'192.168.1.100';
   if(document.getElementById('i-mq-p'))document.getElementById('i-mq-p').innerText=mp||'1883';
+  if(document.getElementById('i-mq-u'))document.getElementById('i-mq-u').innerText=mu||'(none)';
   if(document.getElementById('i-mq-c'))document.getElementById('i-mq-c').innerText=mc||'STM32_W5500';
   if(document.getElementById('i-mq-t'))document.getElementById('i-mq-t').innerText=mt||'stm32';
   if(document.getElementById('i-mq-ft'))document.getElementById('i-mq-ft').innerText=mft.replace('%prefix%','cmnd').replace('%topic%',mt||'stm32');
+  if(document.getElementById('i-mq-fb'))document.getElementById('i-mq-fb').innerText='cmnd/'+(mc||'stm32')+'_fb/';
 }
 
 var pinDetails={

@@ -9,7 +9,7 @@
 #define FLASH_MQTT_META     0x00200000U   // 4KB sector untuk config
 
 // =============================================================================
-// STRUCT CONFIG MQTT — persis field Tasmota
+// STRUCT CONFIG MQTT — persis field Tsamota
 // =============================================================================
 typedef struct {
     char     host       [64];  // MQTT Broker IP / hostname
@@ -29,7 +29,7 @@ typedef struct {
 #define MQTT_CONFIG_SIZE         sizeof(MqttConfig_t)
 
 // =============================================================================
-// DEFAULT CONFIG — sama seperti Tasmota default
+// DEFAULT CONFIG — sama seperti Tsamota default
 // =============================================================================
 #define MQTT_DEFAULT_HOST        "192.168.1.100"
 #define MQTT_DEFAULT_PORT        1883

@@ -26,6 +26,9 @@ C_SRCS += \
 ../Core/Src/web_cmnd.c \
 ../Core/Src/web_config.c 
 
+O_SRCS += \
+../Core/Src/ota.o 
+
 OBJS += \
 ./Core/Src/bl0906.o \
 ./Core/Src/crc.o \

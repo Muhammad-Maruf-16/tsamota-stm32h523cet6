@@ -34,37 +34,37 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := tasmota stm32h523cet6
+BUILD_ARTIFACT_NAME := tsamota stm32h523cet6
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-tasmota\ stm32h523cet6.elf \
+tsamota\ stm32h523cet6.elf \
 
 MAP_FILES += \
-tasmota\ stm32h523cet6.map \
+tsamota\ stm32h523cet6.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-tasmota\ stm32h523cet6.list \
+tsamota\ stm32h523cet6.list \
 
 OBJCOPY_BIN += \
-tasmota\ stm32h523cet6.bin \
+tsamota\ stm32h523cet6.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: tasmota\ stm32h523cet6.elf secondary-outputs
+main-build: tsamota\ stm32h523cet6.elf secondary-outputs
 
 # Tool invocations
-tasmota\ stm32h523cet6.elf tasmota\ stm32h523cet6.map: $(OBJS) $(USER_OBJS) /home/maruf/STM32CubeIDE/kriptografi/tasmota\ stm32h523cet6/STM32H523CETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "tasmota stm32h523cet6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"/home/maruf/STM32CubeIDE/kriptografi/tasmota stm32h523cet6/STM32H523CETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="tasmota stm32h523cet6.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+tsamota\ stm32h523cet6.elf tsamota\ stm32h523cet6.map: $(OBJS) $(USER_OBJS) /home/maruf/STM32CubeIDE/kriptografi/tsamota\ stm32h523cet6/STM32H523CETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "tsamota stm32h523cet6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"/home/maruf/STM32CubeIDE/kriptografi/tsamota stm32h523cet6/STM32H523CETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="tsamota stm32h523cet6.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -73,19 +73,19 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-tasmota\ stm32h523cet6.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "tasmota stm32h523cet6.list"
+tsamota\ stm32h523cet6.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "tsamota stm32h523cet6.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-tasmota\ stm32h523cet6.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "tasmota stm32h523cet6.bin"
+tsamota\ stm32h523cet6.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "tsamota stm32h523cet6.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout tasmota\ stm32h523cet6.bin tasmota\ stm32h523cet6.elf tasmota\ stm32h523cet6.list tasmota\ stm32h523cet6.map tasmota\\ stm32h523cet6.elf
+	-$(RM) default.size.stdout tsamota\ stm32h523cet6.bin tsamota\ stm32h523cet6.elf tsamota\ stm32h523cet6.list tsamota\ stm32h523cet6.map tsamota\\ stm32h523cet6.elf
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)

@@ -39,7 +39,7 @@ Core/Src/ota.o: ../Core/Src/ota.c ../Core/Inc/ota.h ../Core/Inc/main.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_ll_usart.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_ll_gpio.h \
  ../Core/Inc/octospi_ll.h ../Core/Inc/web_config.h ../Core/Inc/web_cmnd.h \
- ../Core/Inc/html_flash.h ../Core/Inc/html_landing.h
+ ../Core/Inc/html_flash.h ../Core/Inc/html_landing.h ../Core/Inc/bl0906.h
 ../Core/Inc/ota.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h:
@@ -86,3 +86,4 @@ Core/Src/ota.o: ../Core/Src/ota.c ../Core/Inc/ota.h ../Core/Inc/main.h \
 ../Core/Inc/web_cmnd.h:
 ../Core/Inc/html_flash.h:
 ../Core/Inc/html_landing.h:
+../Core/Inc/bl0906.h:
